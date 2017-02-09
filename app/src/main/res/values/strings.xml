@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Watchdog</string>
+    <string name="service_name">Watchdog Service</string>
+</resources>
