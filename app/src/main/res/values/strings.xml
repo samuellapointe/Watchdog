@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Watchdog</string>
     <string name="service_name">Watchdog Service</string>
+    <string name="title_activity_serverdetails">Server Details</string>
 </resources>

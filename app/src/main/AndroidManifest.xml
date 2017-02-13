@@ -15,10 +15,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
-            android:name="WatchdogService"
-            android:label="@string/service_name">
-        </service>
+            android:name=".WatchdogService"
+            android:label="@string/service_name"></service>
+
+        <activity
+            android:name=".ServerDetailsActivity"
+            android:label="@string/title_activity_serverdetails"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
