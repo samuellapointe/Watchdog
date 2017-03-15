@@ -47,20 +47,6 @@ public class ServerListActivity extends ListActivity {
                 context.startService(i);
             }
         });*/
-
-
-        // Bouton de détails du serveur.
-        /*final Button buttonServerDetails = (Button) findViewById(R.id.button2);
-
-        // Action au clic du bouton de détails du serveur
-        buttonServerDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Aller à la page des détails du serveur
-                Intent i = new Intent(context, ServerDetailsActivity.class);
-                startActivity(i);
-            }
-        });*/
     }
 
     public void OnAddServerClick(View v) {

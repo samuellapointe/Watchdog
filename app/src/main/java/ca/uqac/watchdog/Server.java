@@ -16,4 +16,8 @@ public class Server {
     public String getDisplayName() {
         return displayName;
     }
+
+    public String getURL() {
+        return url;
+    }
 }
