@@ -1,10 +1,20 @@
 package ca.uqac.watchdog;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
 
-public class ServerListActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ServerListActivity extends ListActivity {
+
+    ArrayList<Server> servers = new ArrayList<Server>();
+
+    ArrayAdapter<Server> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,6 +23,13 @@ public class ServerListActivity extends AppCompatActivity {
 
         // Context de l'activité
         final Context context = this;
+
+        // Créer l'adapteur
+        adapter = new ServerAdapter(this,
+                android.R.layout.simple_list_item_1,
+                servers);
+        setListAdapter(adapter);
+
 
         // Trouver le bouton
         //final Button clickButton = (Button) findViewById(R.id.button);
@@ -44,5 +61,10 @@ public class ServerListActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });*/
+    }
+
+    public void OnAddServerClick(View v) {
+        servers.add(new Server("Test", "https://heartbeat.haruha.ru/api.php"));
+        adapter.notifyDataSetChanged();
     }
 }
