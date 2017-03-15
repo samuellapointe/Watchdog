@@ -1,27 +1,24 @@
 package ca.uqac.watchdog;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class ServerListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_serverlist);
 
         // Context de l'activité
         final Context context = this;
 
         // Trouver le bouton
-        final Button clickButton = (Button) findViewById(R.id.button);
+        //final Button clickButton = (Button) findViewById(R.id.button);
 
         // Donner une action au bouton
-        clickButton.setOnClickListener(new View.OnClickListener() {
+        /*clickButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Juste pour voir que ça marche
@@ -32,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("TestKey", "Value"); // On peut passer des données à un service
                 context.startService(i);
             }
-        });
+        });*/
 
 
         // Bouton de détails du serveur.
-        final Button buttonServerDetails = (Button) findViewById(R.id.button2);
+        /*final Button buttonServerDetails = (Button) findViewById(R.id.button2);
 
         // Action au clic du bouton de détails du serveur
         buttonServerDetails.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +43,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(context, ServerDetailsActivity.class);
                 startActivity(i);
             }
-        });
+        });*/
     }
 }
