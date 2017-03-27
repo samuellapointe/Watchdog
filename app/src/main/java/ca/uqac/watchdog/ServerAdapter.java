@@ -35,12 +35,16 @@ public class ServerAdapter extends ArrayAdapter<Server> {
         TextView serverURL = (TextView) convertView.findViewById(R.id.serverURL);
         serverURL.setText(server.getURL());
 
+        convertView.setTag(server);
+
         LinearLayout serverContainer = (LinearLayout) convertView.findViewById(R.id.serverItemContainer);
         serverContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Aller à la page des détails du serveur
                 Intent i = new Intent(context, ServerDetailsActivity.class);
+                Server server = (Server)(v.getTag());
+                i.putExtra("Server", server);
                 context.startActivity(i);
             }
         });
