@@ -41,7 +41,9 @@ public class Server implements Parcelable{
     }
 
     public void writeToParcel(Parcel out, int flags) {
+        out.writeDouble(cpu);
         out.writeString(displayName);
+        out.writeDouble(ram);
         out.writeString(url);
     }
 
@@ -57,7 +59,9 @@ public class Server implements Parcelable{
     };
 
     private Server(Parcel in) {
+        cpu = in.readDouble();
         displayName = in.readString();
+        ram = in.readDouble();
         url = in.readString();
     }
     // Parcelable implementation end
