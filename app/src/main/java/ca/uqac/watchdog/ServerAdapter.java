@@ -48,7 +48,7 @@ public class ServerAdapter extends ArrayAdapter<Server> {
                 // Aller à la page des détails du serveur
                 Intent i = new Intent(context, ServerDetailsActivity.class);
                 Server server = (Server)(v.getTag());
-                i.putExtra("Server", server);
+                i.putExtra(ServerDetailsActivity.SERVER, server);
                 context.startActivity(i);
             }
         });

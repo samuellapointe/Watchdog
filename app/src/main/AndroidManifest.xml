@@ -18,12 +18,14 @@
 
         <service
             android:name=".WatchdogService"
-            android:label="@string/service_name"></service>
+            android:label="@string/service_name">
+        </service>
 
         <activity
             android:name=".ServerDetailsActivity"
             android:label="@string/title_activity_serverdetails"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+
     </application>
 
 </manifest>
