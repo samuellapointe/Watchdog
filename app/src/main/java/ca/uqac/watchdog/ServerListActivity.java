@@ -3,6 +3,7 @@ package ca.uqac.watchdog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,10 @@ public class ServerListActivity extends ListActivity {
                 android.R.layout.simple_list_item_1,
                 servers);
         setListAdapter(adapter);
+        // Starter le service
+        Intent i = new Intent(context, WatchdogService.class);
+        i.putExtra("TestKey", "Value"); // On peut passer des données à un service
+        context.startService(i);
 
         LoadServers();
     }
