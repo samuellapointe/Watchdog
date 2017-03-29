@@ -2,6 +2,7 @@ package ca.uqac.watchdog;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * Created by Sam on 2017-03-15.
@@ -18,6 +19,17 @@ public class Server implements Parcelable{
         this.url = url;
     }
 
+    // Create a Server instance from a saved string
+    public Server(String savedString) {
+        String subStrings[] = savedString.split(",");
+        if (subStrings.length == 2) {
+            this.displayName = subStrings[0];
+            this.url = subStrings[1];
+        } else {
+            Log.d("Error", "Unable to create server using saved string");
+        }
+    }
+
     public double getCpu() { return cpu;}
 
     public String getDisplayName() {
@@ -28,6 +40,10 @@ public class Server implements Parcelable{
 
     public String getURL() {
         return url;
+    }
+
+    public String toSaveString() {
+        return displayName + "," + url;
     }
 
     public void setCpu(double cpu) { this.cpu = cpu; }

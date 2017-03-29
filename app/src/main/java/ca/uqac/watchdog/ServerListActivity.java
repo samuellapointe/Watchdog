@@ -3,9 +3,11 @@ package ca.uqac.watchdog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerListActivity extends ListActivity {
+
+    public static final String PREFS_NAME = "SavedServers";
 
     ArrayList<Server> servers = new ArrayList<Server>();
 
@@ -35,23 +39,7 @@ public class ServerListActivity extends ListActivity {
                 servers);
         setListAdapter(adapter);
 
-
-        // Trouver le bouton
-        //final Button clickButton = (Button) findViewById(R.id.button);
-
-        // Donner une action au bouton
-        /*clickButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Juste pour voir que ça marche
-                clickButton.setText("OK!");
-
-                // Starter le service
-                Intent i = new Intent(context, WatchdogService.class);
-                i.putExtra("TestKey", "Value"); // On peut passer des données à un service
-                context.startService(i);
-            }
-        });*/
+        LoadServers();
     }
 
     public void OnAddServerClick(View v) {
@@ -90,7 +78,47 @@ public class ServerListActivity extends ListActivity {
     }
 
     public void AddServer(String serverName, String serverURL) {
-        servers.add(new Server(serverName, serverURL));
+        Server newServer = new Server(serverName, serverURL);
+        servers.add(newServer);
+        AddServerToSavedServers(newServer);
         adapter.notifyDataSetChanged();
+    }
+
+    public void AddLoadedServer(Server server) {
+        servers.add(server);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void LoadServers() {
+        SharedPreferences savedServers = getSharedPreferences(PREFS_NAME, 0);
+        String savedServersString = savedServers.getString("servers", "");
+
+        String serverStrings[] = savedServersString.split("#");
+        for (int i = 0; i < serverStrings.length; i++) {
+            if (serverStrings[i].length() > 1) {
+                Server newServer = new Server(serverStrings[i]);
+                AddLoadedServer(newServer);
+            }
+        }
+    }
+
+    public void AddServerToSavedServers(Server server) {
+        // Save servers as strings
+        String serverString = server.toSaveString();
+
+        // Get saved servers
+        SharedPreferences savedServers = getSharedPreferences(PREFS_NAME, 0);
+        String savedServersString = savedServers.getString("servers", "");
+
+        // Add server separator if needed
+        if (savedServersString.length() != 0) {
+            savedServersString += "#";
+        }
+
+        // Save changes
+        savedServersString += serverString;
+        SharedPreferences.Editor editor = savedServers.edit();
+        editor.putString("servers", savedServersString);
+        editor.commit();
     }
 }
