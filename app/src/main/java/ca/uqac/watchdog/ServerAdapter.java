@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,8 +18,11 @@ import java.util.ArrayList;
 
 public class ServerAdapter extends ArrayAdapter<Server> {
 
+    private Context parentContext;
+
     public ServerAdapter(Context context, int textViewResourceId, ArrayList<Server> items) {
         super(context, textViewResourceId, items);
+        this.parentContext = context;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -46,6 +50,19 @@ public class ServerAdapter extends ArrayAdapter<Server> {
                 Server server = (Server)(v.getTag());
                 i.putExtra("Server", server);
                 context.startActivity(i);
+            }
+        });
+
+        serverContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (parentContext instanceof ServerListActivity) {
+                    Server server = (Server)(v.getTag());
+                    ((ServerListActivity) parentContext).DeleteServer(server);
+                    return true;
+                } else {
+                    return false; // Long click not handled
+                }
             }
         });
 

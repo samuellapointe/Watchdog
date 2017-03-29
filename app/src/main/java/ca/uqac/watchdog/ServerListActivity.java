@@ -126,4 +126,38 @@ public class ServerListActivity extends ListActivity {
         editor.putString("servers", savedServersString);
         editor.commit();
     }
+    
+    public void DeleteServer(Server server) {
+        Toast.makeText(this, "Server deleted", Toast.LENGTH_SHORT).show();
+
+        // Get server as string
+        String serverString = server.toSaveString();
+
+        // Get saved servers
+        SharedPreferences savedServers = getSharedPreferences(PREFS_NAME, 0);
+        String savedServersString = savedServers.getString("servers", "");
+        String newSavedServersString = "";
+
+        // Add each server that isn't the one we're deleting to the server list string
+        String serverStrings[] = savedServersString.split("#");
+        for (int i = 0; i < serverStrings.length; i++) {
+            if (!serverStrings[i].equals(serverString)) {
+                newSavedServersString += serverStrings[i] + "#";
+            }
+        }
+
+        // Remove extra #
+        if (newSavedServersString.length() > 1 && newSavedServersString.endsWith("#")) {
+            newSavedServersString = newSavedServersString.substring(0, newSavedServersString.length() - 1);
+        }
+
+        // Save changes
+        SharedPreferences.Editor editor = savedServers.edit();
+        editor.putString("servers", newSavedServersString);
+        editor.commit();
+
+        // Remove server from listview
+        servers.remove(servers.indexOf(server));
+        adapter.notifyDataSetChanged();
+    }
 }

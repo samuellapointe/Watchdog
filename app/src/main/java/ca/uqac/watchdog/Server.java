@@ -15,8 +15,8 @@ public class Server implements Parcelable{
     private double ram;
 
     public Server(String displayName, String url) {
-        this.displayName = displayName;
-        this.url = url;
+        this.displayName = displayName.replace('#', '_').replace(',','_'); // Remove separators
+        this.url = url.replace('#', '_').replace(',','_'); // Remove separators;
     }
 
     // Create a Server instance from a saved string
