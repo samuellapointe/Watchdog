@@ -78,12 +78,14 @@ public class WatchdogService extends Service {
                         if(parts.size() >= 11) {
                             server.setCpu(Double.parseDouble(parts.get(3)));
                             server.setRam(Double.parseDouble(parts.get(7)));
+                            server.setRamCap(Double.parseDouble(parts.get(10).substring(1,parts.get(10).length()-1)));
                         }
                         else
                         {
                             // Response couldn't be parsed.
                             server.setCpu(-1);
                             server.setRam(-1);
+                            server.setRamCap(-1);
                         }
 
                         // Update listener with new information.
@@ -100,6 +102,7 @@ public class WatchdogService extends Service {
                         // Set invalid value to make it clear that data is incorrect.
                         server.setCpu(-1);
                         server.setRam(-1);
+                        server.setRamCap(-1);
 
                         // Update listener with new information.
                         ListenerServerUpdated();

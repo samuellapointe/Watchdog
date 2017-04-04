@@ -13,6 +13,7 @@ public class Server implements Parcelable{
     private String url;
     private double cpu;
     private double ram;
+    private double ramCap;
 
     public Server(String displayName, String url) {
         this.displayName = displayName.replace('#', '_').replace(',','_'); // Remove separators
@@ -36,6 +37,8 @@ public class Server implements Parcelable{
         return displayName;
     }
 
+    public double getRamCap() { return ramCap; }
+
     public double getRam() { return ram;}
 
     public String getURL() {
@@ -50,6 +53,8 @@ public class Server implements Parcelable{
 
     public void setRam(double ram) { this.ram = ram; }
 
+    public void setRamCap(double ramCap) { this.ramCap = ramCap; }
+
     // Parcelable implementation start
     // Interface that allows passing objects efficiently in Android
     public int describeContents() {
@@ -61,6 +66,7 @@ public class Server implements Parcelable{
         out.writeString(displayName);
         out.writeDouble(ram);
         out.writeString(url);
+        out.writeDouble(ramCap);
     }
 
     public static final Parcelable.Creator<Server> CREATOR
@@ -79,6 +85,7 @@ public class Server implements Parcelable{
         displayName = in.readString();
         ram = in.readDouble();
         url = in.readString();
+        ramCap = in.readDouble();
     }
     // Parcelable implementation end
 }

@@ -2,6 +2,6 @@
     <string name="app_name">Watchdog</string>
     <string name="service_name">Watchdog Service</string>
     <string name="title_activity_serverdetails">Server Details</string>
-    <string name="label_server_detail_ram">RAM:</string>
-    <string name="label_server_detail_cpu">CPU:</string>
+    <string name="label_server_detail_ram">RAM utilisé (MB):</string>
+    <string name="label_server_detail_cpu">CPU utilisé:</string>
 </resources>

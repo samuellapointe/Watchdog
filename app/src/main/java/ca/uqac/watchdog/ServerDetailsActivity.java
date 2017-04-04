@@ -18,6 +18,7 @@ import android.widget.TextView;
 public class ServerDetailsActivity extends AppCompatActivity {
     public static final String SERVER = "Server";
 
+    private double percentageUsage;
     // The server displayed on this page.
     Server mServer = null;
 
@@ -83,14 +84,28 @@ public class ServerDetailsActivity extends AppCompatActivity {
 
     private void UpdateServer()
     {
+
         if(mServer != null) {
-            // Display Ram
+            //Display server name
+            final TextView textViewServerName = (TextView) findViewById(R.id.nomServer);
+            textViewServerName.setText(String.valueOf(mServer.getDisplayName()));
+
+            // Display Ram in use
             final TextView textViewRam = (TextView) findViewById(R.id.valueRam);
-            textViewRam.setText(String.valueOf(mServer.getRam()));
+            textViewRam.setText(String.valueOf(mServer.getRam()) + " MB");
+
+            //Display Ram Capacity
+            final TextView textViewRamCap = (TextView) findViewById(R.id.ramCapacity);
+            textViewRamCap.setText(String.valueOf(mServer.getRamCap()) + " MB");
+
+            //Display percentage of used Ram
+            percentageUsage = (mServer.getRam()/mServer.getRamCap())*100;
+            final TextView textViewRamPerc = (TextView) findViewById(R.id.ramPercentage);
+            textViewRamPerc.setText(String.format("%.2f",percentageUsage) + "%");
 
             // Display CPU
             final TextView textViewCpu = (TextView) findViewById(R.id.valueCpu);
-            textViewCpu.setText(String.valueOf(mServer.getCpu()));
+            textViewCpu.setText(String.valueOf(mServer.getCpu()) + " GHz");
         }
     }
 }
