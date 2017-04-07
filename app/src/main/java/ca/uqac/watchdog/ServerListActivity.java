@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,8 +24,11 @@ public class ServerListActivity extends ListActivity {
     public static final String PREFS_NAME = "SavedServers";
 
     ArrayList<Server> servers = new ArrayList<Server>();
-
     ArrayAdapter<Server> adapter;
+
+    // DB stuff
+    ServerEntryDBHelper dbHelper;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,17 @@ public class ServerListActivity extends ListActivity {
                 servers);
         setListAdapter(adapter);
 
+        // Créer les objets de DB
+        dbHelper = new ServerEntryDBHelper(this);
+
         LoadServers();
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        dbHelper.close();
+        super.onDestroy();
     }
 
     public void OnAddServerClick(View v) {
@@ -81,79 +95,26 @@ public class ServerListActivity extends ListActivity {
     public void AddServer(String serverName, String serverURL) {
         Server newServer = new Server(serverName, serverURL);
         servers.add(newServer);
-        AddServerToSavedServers(newServer);
-        adapter.notifyDataSetChanged();
-    }
-
-    public void AddLoadedServer(Server server) {
-        servers.add(server);
+        dbHelper.addServer(db, newServer);
         adapter.notifyDataSetChanged();
     }
 
     public void LoadServers() {
-        SharedPreferences savedServers = getSharedPreferences(PREFS_NAME, 0);
-        String savedServersString = savedServers.getString("servers", "");
+        db = dbHelper.getReadableDatabase();
+        // Add all, otherwise the adapter loses the reference to the server list
+        servers.addAll(dbHelper.getServers(db));
 
-        String serverStrings[] = savedServersString.split("#");
-        for (int i = 0; i < serverStrings.length; i++) {
-            if (serverStrings[i].length() > 1) {
-                Server newServer = new Server(serverStrings[i]);
-                AddLoadedServer(newServer);
-            }
-        }
-    }
+        // We do not need to read into the db anymore after we've loaded the servers
+        db.close();
+        db = dbHelper.getWritableDatabase();
 
-    public void AddServerToSavedServers(Server server) {
-        // Save servers as strings
-        String serverString = server.toSaveString();
-
-        // Get saved servers
-        SharedPreferences savedServers = getSharedPreferences(PREFS_NAME, 0);
-        String savedServersString = savedServers.getString("servers", "");
-
-        // Add server separator if needed
-        if (savedServersString.length() != 0) {
-            savedServersString += "#";
-        }
-
-        // Save changes
-        savedServersString += serverString;
-        SharedPreferences.Editor editor = savedServers.edit();
-        editor.putString("servers", savedServersString);
-        editor.commit();
+        adapter.notifyDataSetChanged();
     }
     
     public void DeleteServer(Server server) {
-        Toast.makeText(this, "Server deleted", Toast.LENGTH_SHORT).show();
-
-        // Get server as string
-        String serverString = server.toSaveString();
-
-        // Get saved servers
-        SharedPreferences savedServers = getSharedPreferences(PREFS_NAME, 0);
-        String savedServersString = savedServers.getString("servers", "");
-        String newSavedServersString = "";
-
-        // Add each server that isn't the one we're deleting to the server list string
-        String serverStrings[] = savedServersString.split("#");
-        for (int i = 0; i < serverStrings.length; i++) {
-            if (!serverStrings[i].equals(serverString)) {
-                newSavedServersString += serverStrings[i] + "#";
-            }
-        }
-
-        // Remove extra #
-        if (newSavedServersString.length() > 1 && newSavedServersString.endsWith("#")) {
-            newSavedServersString = newSavedServersString.substring(0, newSavedServersString.length() - 1);
-        }
-
-        // Save changes
-        SharedPreferences.Editor editor = savedServers.edit();
-        editor.putString("servers", newSavedServersString);
-        editor.commit();
-
-        // Remove server from listview
-        servers.remove(servers.indexOf(server));
+        dbHelper.deleteServer(db, server);
+        Toast.makeText(this, "Server deleted!", Toast.LENGTH_SHORT).show();
+        servers.remove(server);
         adapter.notifyDataSetChanged();
     }
 }
