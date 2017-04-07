@@ -10,18 +10,21 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServerListActivity extends ListActivity {
-
-    public static final String PREFS_NAME = "SavedServers";
 
     ArrayList<Server> servers = new ArrayList<Server>();
     ArrayAdapter<Server> adapter;
@@ -43,6 +46,8 @@ public class ServerListActivity extends ListActivity {
                 android.R.layout.simple_list_item_1,
                 servers);
         setListAdapter(adapter);
+
+        registerForContextMenu(this.getListView());
 
         // Créer les objets de DB
         dbHelper = new ServerEntryDBHelper(this);
@@ -92,6 +97,36 @@ public class ServerListActivity extends ListActivity {
         alertDialog.show();
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.contextmenu_serverlist, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info;
+        try {
+            info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        } catch (ClassCastException e) {
+            Log.e("ERROR", "bad menuInfo", e);
+            return false;
+        }
+
+        Server server = servers.get(info.position);
+        switch(item.getItemId()) {
+            case R.id.edit:
+                EditServer(server);
+                return true;
+            case R.id.delete:
+                DeleteServer(server);
+                return true;
+        }
+
+        return false;
+    }
+
     public void AddServer(String serverName, String serverURL) {
         Server newServer = new Server(serverName, serverURL);
         servers.add(newServer);
@@ -109,6 +144,10 @@ public class ServerListActivity extends ListActivity {
         db = dbHelper.getWritableDatabase();
 
         adapter.notifyDataSetChanged();
+    }
+
+    public void EditServer(Server server) {
+        Toast.makeText(this, "Edit server", Toast.LENGTH_SHORT).show();
     }
     
     public void DeleteServer(Server server) {

@@ -56,13 +56,14 @@ public class ServerAdapter extends ArrayAdapter<Server> {
         serverContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (parentContext instanceof ServerListActivity) {
+                /*if (parentContext instanceof ServerListActivity) {
                     Server server = (Server)(v.getTag());
                     ((ServerListActivity) parentContext).DeleteServer(server);
                     return true;
                 } else {
                     return false; // Long click not handled
-                }
+                }*/
+                return false;
             }
         });
 
