@@ -97,6 +97,45 @@ public class ServerListActivity extends ListActivity {
         alertDialog.show();
     }
 
+    public void OnEditServerClick(final Server server) {
+        final Context context = this;
+
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptView = li.inflate(R.layout.prompt_addserver, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setView(promptView);
+
+        final EditText editTextServerName = (EditText) promptView.findViewById(R.id.editTextServerName);
+        final EditText editTextServerURL = (EditText) promptView.findViewById(R.id.editTextServerURL);
+
+        editTextServerName.setText(server.getDisplayName());
+        editTextServerURL.setText(server.getURL());
+
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditServer(
+                                server,
+                                editTextServerName.getText().toString(),
+                                editTextServerURL.getText().toString()
+                        );
+                    }
+                });
+        alertDialogBuilder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Cancel pressed
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -117,7 +156,7 @@ public class ServerListActivity extends ListActivity {
         Server server = servers.get(info.position);
         switch(item.getItemId()) {
             case R.id.edit:
-                EditServer(server);
+                OnEditServerClick(server);
                 return true;
             case R.id.delete:
                 DeleteServer(server);
@@ -146,8 +185,20 @@ public class ServerListActivity extends ListActivity {
         adapter.notifyDataSetChanged();
     }
 
-    public void EditServer(Server server) {
-        Toast.makeText(this, "Edit server", Toast.LENGTH_SHORT).show();
+    public void EditServer(Server server, String serverName, String serverURL) {
+        // Save old name
+        String oldName = server.getDisplayName();
+
+        // Update server
+        server.setDisplayName(serverName);
+        server.setURL(serverURL);
+
+        // Update in DB
+        dbHelper.updateServer(db, server, oldName);
+
+        // Update list
+        adapter.notifyDataSetChanged();
+        Toast.makeText(this, "Server updated", Toast.LENGTH_SHORT).show();
     }
     
     public void DeleteServer(Server server) {

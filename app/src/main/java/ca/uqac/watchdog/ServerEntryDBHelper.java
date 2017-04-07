@@ -100,5 +100,25 @@ public class ServerEntryDBHelper extends SQLiteOpenHelper {
         db.delete(ServerEntry.TABLE_NAME, selection, selectionArgs);
     }
 
+    public int updateServer(SQLiteDatabase db, Server server, String oldName) {
+        // New values
+        ContentValues values = new ContentValues();
+        values.put(ServerEntry.COLUMN_NAME_NAME, server.getDisplayName());
+        values.put(ServerEntry.COLUMN_NAME_URL, server.getURL());
+
+        // Select the right row
+        String selection = ServerEntry.COLUMN_NAME_NAME + " Like ?";
+        String[] selectionArgs = { oldName };
+
+        int count = db.update(
+                ServerEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
+        );
+
+        return count;
+    }
+
 
 }

@@ -36,9 +36,13 @@ public class Server implements Parcelable{
 
     public void setCpu(double cpu) { this.cpu = cpu; }
 
+    public void setDisplayName(String displayName) {this.displayName = displayName;}
+
     public void setRam(double ram) { this.ram = ram; }
 
     public void setRamCap(double ramCap) { this.ramCap = ramCap; }
+
+    public void setURL(String url) {this.url = url;}
 
     // Parcelable implementation start
     // Interface that allows passing objects efficiently in Android
