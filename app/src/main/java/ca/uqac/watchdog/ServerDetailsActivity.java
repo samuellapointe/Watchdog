@@ -4,10 +4,18 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -26,6 +34,12 @@ public class ServerDetailsActivity extends AppCompatActivity {
     WatchdogService watchdogService = null;
 
     boolean mWatchdogServiceBound = false;
+
+    // Left drawer
+    private String[] drawerElements;
+    private DrawerLayout drawerLayout;
+    private ListView drawerList;
+    private ActionBarDrawerToggle drawerToggle;
 
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -68,6 +82,60 @@ public class ServerDetailsActivity extends AppCompatActivity {
                 bindService(i, mConnection, Context.BIND_AUTO_CREATE);
             }
         }
+
+        // Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.serverdetails_toolbar);
+        setSupportActionBar(toolbar);
+
+        // Setup left drawer
+        drawerElements = getResources().getStringArray(R.array.drawer_items);
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        drawerList = (ListView)findViewById(R.id.left_drawer);
+
+        drawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, drawerElements));
+
+        // Drawer toggle button
+        drawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                R.string.drawer_open,
+                R.string.drawer_close
+                ) {
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                // Do something fun
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                // Do something cool
+            }
+        };
+
+        drawerLayout.addDrawerListener(drawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

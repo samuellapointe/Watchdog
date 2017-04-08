@@ -4,4 +4,12 @@
     <string name="title_activity_serverdetails">Server Details</string>
     <string name="label_server_detail_ram">RAM utilisé (MB):</string>
     <string name="label_server_detail_cpu">CPU utilisé:</string>
+
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_close">Drawer Close</string>
+
+    <string-array name="drawer_items">
+        <item>Server details</item>
+        <item>SSH</item>
+    </string-array>
 </resources>
