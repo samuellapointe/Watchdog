@@ -173,7 +173,7 @@ public class ServerDetailsActivity extends AppCompatActivity {
 
             // Display CPU
             final TextView textViewCpu = (TextView) findViewById(R.id.valueCpu);
-            textViewCpu.setText(String.valueOf(mServer.getCpu()) + " GHz");
+            textViewCpu.setText(String.valueOf(mServer.getCpu()) + "%");
         }
     }
 }
