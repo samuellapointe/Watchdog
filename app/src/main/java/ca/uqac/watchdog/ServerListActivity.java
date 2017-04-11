@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,11 +33,15 @@ public class ServerListActivity extends ListActivity {
     // DB stuff
     ServerEntryDBHelper dbHelper;
     SQLiteDatabase db;
+    Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_serverlist);
+
+        // Pour les threads
+        handler = new Handler();
 
         // Context de l'activité
         final Context context = this;
@@ -167,44 +172,63 @@ public class ServerListActivity extends ListActivity {
     }
 
     public void AddServer(String serverName, String serverURL) {
-        Server newServer = new Server(serverName, serverURL);
-        servers.add(newServer);
-        dbHelper.addServer(db, newServer);
-        adapter.notifyDataSetChanged();
+        final Server newServer = new Server(serverName, serverURL);
+
+        new Thread(new Runnable() {
+            public void run() {
+                dbHelper.addServer(db, newServer);
+                servers.add(newServer);
+                handler.post(RefreshServers);
+            }
+        }).start();
     }
 
     public void LoadServers() {
-        db = dbHelper.getReadableDatabase();
-        // Add all, otherwise the adapter loses the reference to the server list
-        servers.addAll(dbHelper.getServers(db));
+        new Thread(new Runnable() {
+            public void run() {
+                db = dbHelper.getReadableDatabase();
+                // Add all, otherwise the adapter loses the reference to the server list
+                servers.addAll(dbHelper.getServers(db));
 
-        // We do not need to read into the db anymore after we've loaded the servers
-        db.close();
-        db = dbHelper.getWritableDatabase();
-
-        adapter.notifyDataSetChanged();
+                // We do not need to read into the db anymore after we've loaded the servers
+                db.close();
+                db = dbHelper.getWritableDatabase();
+                handler.post(RefreshServers);
+            }
+        }).start();
     }
 
-    public void EditServer(Server server, String serverName, String serverURL) {
+    public void EditServer(final Server server, String serverName, String serverURL) {
         // Save old name
-        String oldName = server.getDisplayName();
+        final String oldName = server.getDisplayName();
 
         // Update server
         server.setDisplayName(serverName);
         server.setURL(serverURL);
 
-        // Update in DB
-        dbHelper.updateServer(db, server, oldName);
-
-        // Update list
-        adapter.notifyDataSetChanged();
+        new Thread(new Runnable() {
+            public void run() {
+                dbHelper.updateServer(db, server, oldName);
+                handler.post(RefreshServers);
+            }
+        }).start();
         Toast.makeText(this, "Server updated", Toast.LENGTH_SHORT).show();
     }
     
-    public void DeleteServer(Server server) {
-        dbHelper.deleteServer(db, server);
+    public void DeleteServer(final Server server) {
+        new Thread(new Runnable() {
+            public void run() {
+                dbHelper.deleteServer(db, server);
+                servers.remove(server);
+                handler.post(RefreshServers);
+            }
+        }).start();
         Toast.makeText(this, "Server deleted!", Toast.LENGTH_SHORT).show();
-        servers.remove(server);
-        adapter.notifyDataSetChanged();
     }
+
+    public Runnable RefreshServers = new Runnable() {
+        public void run() {
+            adapter.notifyDataSetChanged();
+        }
+    };
 }
