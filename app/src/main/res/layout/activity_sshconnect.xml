@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
+
+    <ListView
+    android:id="@+id/left_drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="#111"
+    android:choiceMode="singleChoice"
+    android:divider="@android:color/transparent"
+    android:dividerHeight="0dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/serverdetails_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="70dp"
+            android:text="Connect using SSH"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/username_textbox"
+            android:layout_alignStart="@+id/username_textbox"
+            android:layout_below="@+id/textView4"
+            android:layout_marginTop="17dp"
+            android:text="Username" />
+
+        <EditText
+            android:id="@+id/username_textbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView4"
+            android:layout_marginTop="39dp"
+            android:autoText="false"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:layout_alignRight="@+id/password_text"
+            android:layout_alignEnd="@+id/password_text"
+            android:layout_alignLeft="@+id/password_text"
+            android:layout_alignStart="@+id/password_text" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password"
+            android:layout_below="@+id/username_textbox"
+            android:layout_alignRight="@+id/textView9"
+            android:layout_alignEnd="@+id/textView9"
+            android:layout_marginTop="15dp" />
+
+        <EditText
+            android:id="@+id/password_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView11"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:layout_alignLeft="@+id/textView12"
+            android:layout_alignStart="@+id/textView12"
+            android:layout_alignRight="@+id/serverurl_textbox"
+            android:layout_alignEnd="@+id/serverurl_textbox" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Server address"
+            android:layout_below="@+id/password_text"
+            android:layout_alignLeft="@+id/serverurl_textbox"
+            android:layout_alignStart="@+id/serverurl_textbox"
+            android:layout_marginTop="15dp" />
+
+        <EditText
+            android:id="@+id/serverurl_textbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="textPersonName"
+            android:text="Server URL"
+            android:layout_below="@+id/textView12"
+            android:layout_alignLeft="@+id/radioButton"
+            android:layout_alignStart="@+id/radioButton"
+            android:layout_alignRight="@+id/radioButton2"
+            android:layout_alignEnd="@+id/radioButton2" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/serverurl_textbox"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="Connect" />
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/button3"
+            android:layout_marginLeft="53dp"
+            android:layout_marginStart="53dp"
+            android:layout_marginTop="30dp"
+            android:checked="true"
+            android:text="Use password" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/radioButton"
+            android:layout_alignBottom="@+id/radioButton"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="57dp"
+            android:layout_marginRight="57dp"
+            android:text="Use public key" />
+
+    </RelativeLayout>
+
+</android.support.v4.widget.DrawerLayout>

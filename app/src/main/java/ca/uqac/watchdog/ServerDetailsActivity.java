@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -88,12 +89,15 @@ public class ServerDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Setup left drawer
-        drawerElements = getResources().getStringArray(R.array.drawer_items);
+        drawerElements = getResources().getStringArray(R.array.Details_drawer_items);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.left_drawer);
 
         drawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, drawerElements));
+        drawerList.setItemChecked(0, true);
+
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // Drawer toggle button
         drawerToggle = new ActionBarDrawerToggle(
@@ -108,6 +112,8 @@ public class ServerDetailsActivity extends AppCompatActivity {
             }
 
             public void onDrawerOpened(View drawerView) {
+                drawerList.bringToFront();
+                drawerLayout.requestLayout();
                 super.onDrawerOpened(drawerView);
                 // Do something cool
             }
@@ -116,6 +122,32 @@ public class ServerDetailsActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(drawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+
+            if(position == 1)
+            {
+                Intent i;
+                i = new Intent(getApplicationContext(), SSHConnectActivity.class);
+                i.putExtra("hostname",mServer.getURL());
+                startActivityForResult(i,0);
+                drawerLayout.closeDrawer(drawerList);
+            }
+            if(position == 2)
+            {
+                onBackPressed();
+                drawerLayout.closeDrawer(drawerList);
+            }
+
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        drawerList.setItemChecked(0, true);
     }
 
     @Override
