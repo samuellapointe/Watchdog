@@ -1,5 +1,6 @@
 package ca.uqac.watchdog;
 
+import android.app.DialogFragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Michael Dery on 2017-02-12.
@@ -42,6 +44,16 @@ public class ServerDetailsActivity extends AppCompatActivity {
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
 
+    public void displayGraphRAM(View v){
+        // Create the fragment and show it as a dialog.
+        DialogFragment newFragment = graphFragment.newInstance(mServer.getURL(), "MB", "mem" , 6, 1);
+        newFragment.show(getFragmentManager(), "dialog");
+    }
+    public void displayGraphCPU(View v){
+        // Create the fragment and show it as a dialog.
+        DialogFragment newFragment = graphFragment.newInstance(mServer.getURL(), "%", "cpu" , 6, 1);
+        newFragment.show(getFragmentManager(), "dialog");
+    }
 
     private ServiceConnection mConnection = new ServiceConnection() {
         // Called when the connection with the service is established
