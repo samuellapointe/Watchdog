@@ -11,16 +11,20 @@ import android.util.Log;
 public class Server implements Parcelable{
     private String displayName;
     private String url;
+    private String sshAddress;
     private double cpu;
     private double ram;
     private double ramCap;
 
-    public Server(String displayName, String url) {
+    public Server(String displayName, String url,String sshAddress) {
         this.displayName = displayName.replace('#', '_').replace(',','_'); // Remove separators
         this.url = url.replace('#', '_').replace(',','_'); // Remove separators;
+        this.sshAddress = sshAddress;
     }
 
     public double getCpu() { return cpu;}
+
+    public String getSshAddress() { return sshAddress; }
 
     public String getDisplayName() {
         return displayName;
@@ -44,6 +48,8 @@ public class Server implements Parcelable{
 
     public void setURL(String url) {this.url = url;}
 
+    public void setSshAddress(String sshAddress) { this.sshAddress = sshAddress; }
+
     // Parcelable implementation start
     // Interface that allows passing objects efficiently in Android
     public int describeContents() {
@@ -56,6 +62,7 @@ public class Server implements Parcelable{
         out.writeDouble(ram);
         out.writeString(url);
         out.writeDouble(ramCap);
+        out.writeString(sshAddress);
     }
 
     public static final Parcelable.Creator<Server> CREATOR
@@ -75,6 +82,7 @@ public class Server implements Parcelable{
         ram = in.readDouble();
         url = in.readString();
         ramCap = in.readDouble();
+        sshAddress = in.readString();
     }
     // Parcelable implementation end
 }

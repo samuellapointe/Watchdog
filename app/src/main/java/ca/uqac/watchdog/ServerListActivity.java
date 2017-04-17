@@ -78,7 +78,8 @@ public class ServerListActivity extends ListActivity {
 
         final EditText editTextServerName = (EditText) promptView.findViewById(R.id.editTextServerName);
         final EditText editTextServerURL = (EditText) promptView.findViewById(R.id.editTextServerURL);
-        
+        final EditText editTextSshURL = (EditText) promptView.findViewById(R.id.editTextSSHURL);
+
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
@@ -86,7 +87,8 @@ public class ServerListActivity extends ListActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         AddServer(
                                 editTextServerName.getText().toString(),
-                                editTextServerURL.getText().toString()
+                                editTextServerURL.getText().toString(),
+                                editTextSshURL.getText().toString()
                         );
                     }
                 });
@@ -113,9 +115,11 @@ public class ServerListActivity extends ListActivity {
 
         final EditText editTextServerName = (EditText) promptView.findViewById(R.id.editTextServerName);
         final EditText editTextServerURL = (EditText) promptView.findViewById(R.id.editTextServerURL);
+        final EditText editTextSshURL = (EditText) promptView.findViewById(R.id.editTextSSHURL);
 
         editTextServerName.setText(server.getDisplayName());
         editTextServerURL.setText(server.getURL());
+        editTextSshURL.setText(server.getSshAddress());
 
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("OK",
@@ -125,7 +129,8 @@ public class ServerListActivity extends ListActivity {
                         EditServer(
                                 server,
                                 editTextServerName.getText().toString(),
-                                editTextServerURL.getText().toString()
+                                editTextServerURL.getText().toString(),
+                                editTextSshURL.getText().toString()
                         );
                     }
                 });
@@ -171,8 +176,8 @@ public class ServerListActivity extends ListActivity {
         return false;
     }
 
-    public void AddServer(String serverName, String serverURL) {
-        final Server newServer = new Server(serverName, serverURL);
+    public void AddServer(String serverName, String serverURL, String sshURL) {
+        final Server newServer = new Server(serverName, serverURL, sshURL);
 
         new Thread(new Runnable() {
             public void run() {
@@ -198,13 +203,14 @@ public class ServerListActivity extends ListActivity {
         }).start();
     }
 
-    public void EditServer(final Server server, String serverName, String serverURL) {
+    public void EditServer(final Server server, String serverName, String serverURL, String sshURL) {
         // Save old name
         final String oldName = server.getDisplayName();
 
         // Update server
         server.setDisplayName(serverName);
         server.setURL(serverURL);
+        server.setSshAddress(sshURL);
 
         new Thread(new Runnable() {
             public void run() {

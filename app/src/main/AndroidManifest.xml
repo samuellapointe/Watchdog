@@ -30,6 +30,11 @@
             android:name=".SSHConnectActivity"
             android:label="@string/title_activity_sshconnect"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".SSHConsoleActivity"
+            android:label="@string/title_activity_sshconsole"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

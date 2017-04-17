@@ -64,15 +64,17 @@
             android:id="@+id/username_textbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/password_textbox"
+            android:layout_alignLeft="@+id/password_textbox"
+            android:layout_alignRight="@+id/password_textbox"
+            android:layout_alignStart="@+id/password_textbox"
             android:layout_below="@+id/textView4"
             android:layout_marginTop="39dp"
             android:autoText="false"
             android:ems="10"
             android:inputType="textPersonName"
-            android:layout_alignRight="@+id/password_text"
-            android:layout_alignEnd="@+id/password_text"
-            android:layout_alignLeft="@+id/password_text"
-            android:layout_alignStart="@+id/password_text" />
+            android:text="heartbeatUser"
+            tools:text="heartbeatUser" />
 
         <TextView
             android:id="@+id/textView11"
@@ -85,23 +87,25 @@
             android:layout_marginTop="15dp" />
 
         <EditText
-            android:id="@+id/password_text"
+            android:id="@+id/password_textbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/serverurl_textbox"
+            android:layout_alignLeft="@+id/textView12"
+            android:layout_alignRight="@+id/serverurl_textbox"
+            android:layout_alignStart="@+id/textView12"
             android:layout_below="@+id/textView11"
             android:ems="10"
-            android:inputType="textPassword"
-            android:layout_alignLeft="@+id/textView12"
-            android:layout_alignStart="@+id/textView12"
-            android:layout_alignRight="@+id/serverurl_textbox"
-            android:layout_alignEnd="@+id/serverurl_textbox" />
+            android:inputType="textVisiblePassword"
+            android:text="eruNihAyG9"
+            tools:text="eruNihAyG9" />
 
         <TextView
             android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Server address"
-            android:layout_below="@+id/password_text"
+            android:layout_below="@+id/password_textbox"
             android:layout_alignLeft="@+id/serverurl_textbox"
             android:layout_alignStart="@+id/serverurl_textbox"
             android:layout_marginTop="15dp" />
@@ -121,7 +125,7 @@
             android:layout_alignEnd="@+id/radioButton2" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/ConnectButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/serverurl_textbox"
@@ -135,7 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/button3"
+            android:layout_below="@+id/ConnectButton"
             android:layout_marginLeft="53dp"
             android:layout_marginStart="53dp"
             android:layout_marginTop="30dp"

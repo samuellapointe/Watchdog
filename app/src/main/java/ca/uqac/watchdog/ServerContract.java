@@ -17,5 +17,6 @@ public final class ServerContract {
         public static final String TABLE_NAME = "servers";
         public static final String COLUMN_NAME_NAME = "name";
         public static final String COLUMN_NAME_URL = "url";
+        public static final String COLUMN_NAME_SSH = "ssh";
     }
 }

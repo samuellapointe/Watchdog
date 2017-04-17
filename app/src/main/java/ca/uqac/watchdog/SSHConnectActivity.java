@@ -3,8 +3,9 @@ package ca.uqac.watchdog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +14,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+
+import java.util.List;
+import java.util.Properties;
 
 public class SSHConnectActivity extends AppCompatActivity {
     // Left drawer
@@ -22,6 +32,11 @@ public class SSHConnectActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
+    private int posPressed = -1;
+    private TextView usernameTextView;
+    private TextView passwordTextView;
+    private TextView serveraddressTextView;
+    private boolean connexionSuccess = false;
 
 
     @Override
@@ -30,14 +45,18 @@ public class SSHConnectActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sshconnect);
 
         Intent intent = getIntent();
-        final TextView textViewServerUrl = (TextView) findViewById(R.id.serverurl_textbox);
-        textViewServerUrl.setText(String.valueOf(intent.getStringExtra("hostname")));
+        usernameTextView = (TextView) findViewById(R.id.username_textbox);
+        passwordTextView = (TextView) findViewById(R.id.password_textbox);
+        serveraddressTextView = (TextView) findViewById(R.id.serverurl_textbox);
+
+        serveraddressTextView.setText(String.valueOf(intent.getStringExtra("hostname")));
+
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.serverdetails_toolbar);
         setSupportActionBar(toolbar);
 
         // Setup left drawer
-        drawerElements = getResources().getStringArray(R.array.SSH_drawer_items);
+        drawerElements = getResources().getStringArray(R.array.drawer_items);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.left_drawer);
 
@@ -71,7 +90,28 @@ public class SSHConnectActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(drawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        Button connectButton = (Button) findViewById(R.id.ConnectButton);
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SSHConnectActivity.this,SSHConsoleActivity.class);
+                i.putExtra("username",usernameTextView.getText().toString());
+                i.putExtra("password",passwordTextView.getText().toString());
+                i.putExtra("sshURL",serveraddressTextView.getText().toString());
+
+                startActivityForResult(i,0);
+            }
+        });
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == 2) {
+            Toast.makeText(SSHConnectActivity.this, "Connection failed", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
 
         @Override
@@ -79,18 +119,25 @@ public class SSHConnectActivity extends AppCompatActivity {
 
             if(position == 0)
             {
+                posPressed = 0;
+                onBackPressed();
+            }
+            if(position == 2)
+            {
+                posPressed = 2;
                 onBackPressed();
             }
 
-
             drawerLayout.closeDrawer(drawerList);
-
         }
     }
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_CANCELED);
+        if(posPressed == 0)
+            setResult(0);
+        if(posPressed == 2)
+            setResult(1);
         super.onBackPressed();
     }
 
@@ -114,4 +161,6 @@ public class SSHConnectActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

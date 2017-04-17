@@ -89,7 +89,7 @@ public class ServerDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Setup left drawer
-        drawerElements = getResources().getStringArray(R.array.Details_drawer_items);
+        drawerElements = getResources().getStringArray(R.array.drawer_items);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.left_drawer);
 
@@ -133,7 +133,7 @@ public class ServerDetailsActivity extends AppCompatActivity {
             {
                 Intent i;
                 i = new Intent(getApplicationContext(), SSHConnectActivity.class);
-                i.putExtra("hostname",mServer.getURL());
+                i.putExtra("hostname",mServer.getSshAddress());
                 startActivityForResult(i,0);
                 drawerLayout.closeDrawer(drawerList);
             }
@@ -147,7 +147,12 @@ public class ServerDetailsActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        drawerList.setItemChecked(0, true);
+        if(resultCode == 0) {
+            drawerList.setItemChecked(0, true);
+        }
+        if(resultCode == 1) {
+            finish();
+        }
     }
 
     @Override

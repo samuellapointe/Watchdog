@@ -24,7 +24,8 @@ public class ServerEntryDBHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + ServerEntry.TABLE_NAME + " (" +
             ServerEntry._ID + " INTEGER PRIMARY KEY," +
             ServerEntry.COLUMN_NAME_NAME + " TEXT," +
-            ServerEntry.COLUMN_NAME_URL + " TEXT)";
+            ServerEntry.COLUMN_NAME_URL + " TEXT," +
+            ServerEntry.COLUMN_NAME_SSH + " TEXT)";
 
     private static final String SQL_DELETE_ENTRIES = "" +
             "DROP TABLE IF EXISTS " + ServerEntry.TABLE_NAME;
@@ -59,6 +60,7 @@ public class ServerEntryDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(ServerEntry.COLUMN_NAME_NAME, server.getDisplayName());
         values.put(ServerEntry.COLUMN_NAME_URL, server.getURL());
+        values.put(ServerEntry.COLUMN_NAME_SSH, server.getSshAddress());
         long newRowId = db.insert(ServerEntry.TABLE_NAME, null, values);
         return newRowId;
     }
@@ -67,7 +69,8 @@ public class ServerEntryDBHelper extends SQLiteOpenHelper {
         String[] projection = {
                 ServerEntry._ID,
                 ServerEntry.COLUMN_NAME_NAME,
-                ServerEntry.COLUMN_NAME_URL
+                ServerEntry.COLUMN_NAME_URL,
+                ServerEntry.COLUMN_NAME_SSH
         };
 
         String sortOrder = ServerEntry.COLUMN_NAME_NAME + " DESC";
@@ -86,7 +89,8 @@ public class ServerEntryDBHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             Server server = new Server(
                     cursor.getString(cursor.getColumnIndexOrThrow(ServerEntry.COLUMN_NAME_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(ServerEntry.COLUMN_NAME_URL))
+                    cursor.getString(cursor.getColumnIndexOrThrow(ServerEntry.COLUMN_NAME_URL)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(ServerEntry.COLUMN_NAME_SSH))
             );
             servers.add(server);
         }
@@ -105,6 +109,7 @@ public class ServerEntryDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(ServerEntry.COLUMN_NAME_NAME, server.getDisplayName());
         values.put(ServerEntry.COLUMN_NAME_URL, server.getURL());
+        values.put(ServerEntry.COLUMN_NAME_SSH, server.getSshAddress());
 
         // Select the right row
         String selection = ServerEntry.COLUMN_NAME_NAME + " Like ?";
