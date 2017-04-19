@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +41,7 @@ public class graphFragment extends DialogFragment {
     private String mCol;
     private int mNbDP;
     private int mTime;
+    private String mTitle;
     GraphView mGraph;
 
     private void updateGraph() {
@@ -85,10 +89,9 @@ public class graphFragment extends DialogFragment {
         };
         queue.add(strRequest);
         queue.start();
-        //return result;
     }
 
-    static graphFragment newInstance(String url, String unit, String col, int nbDP, int time) {
+    static graphFragment newInstance(String url, String unit, String col, int nbDP, int time, String title) {
         graphFragment f = new graphFragment();
 
         Bundle args = new Bundle();
@@ -97,6 +100,7 @@ public class graphFragment extends DialogFragment {
         args.putString("col",col);
         args.putInt("nDP",nbDP);
         args.putInt("time",time);
+        args.putString("title",title);
         f.setArguments(args);
 
         return f;
@@ -110,28 +114,55 @@ public class graphFragment extends DialogFragment {
         mCol = getArguments().getString("col");
         mNbDP = getArguments().getInt("nDP");
         mTime = getArguments().getInt("time");
+        mTitle = getArguments().getString("title");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_graph, container, false);
-        View tv = v.findViewById(R.id.frag);
+
+        View titleView = v.findViewById(R.id.frag);
+
+        Spinner spinnerView = (Spinner)v.findViewById(R.id.timeSpinner);
+        String[] spinnerItems = new String[]{"1", "2", "3", "4", "5", "6", "12", "24"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        spinnerView.setAdapter(adapter);
+        spinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view,
+                                       int position, long id) {
+                Object item = adapterView.getItemAtPosition(position);
+                mTime = Integer.parseInt(item.toString());
+                mGraph.removeAllSeries();
+                updateGraph();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         mGraph = (GraphView) v.findViewById(R.id.graph);
         mGraph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
-                    // show normal x values
-                    return super.formatLabel(value, isValueX);
+                    // show formatted x axis values
+                    double val = mTime*60-((value)*((mTime*60)/mNbDP));
+                    if(val >= 60){
+                        return "-"+Long.toString(Math.round(val/60))+"h";
+                    }
+                    else{
+                        return "-"+Long.toString(Math.round(val))+"m";
+                    }
                 } else {
                     // show symbol in y values
                     return super.formatLabel(value, isValueX) + " "+ mUnit;
                 }
             }
         });
-        updateGraph();
-        ((TextView)tv).setText(mUrl);
+        ((TextView)titleView).setText(mTitle);
         return v;
     }
 }

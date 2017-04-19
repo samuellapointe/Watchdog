@@ -1,6 +1,7 @@
 package ca.uqac.watchdog;
 
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -44,15 +45,23 @@ public class ServerDetailsActivity extends AppCompatActivity {
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
 
+    public void closeGraph(View v){
+        Fragment f = getFragmentManager().findFragmentByTag("graphFragment");
+        if (f != null) {
+            DialogFragment df = (DialogFragment) f;
+            df.dismiss();
+        }
+    }
+
     public void displayGraphRAM(View v){
         // Create the fragment and show it as a dialog.
-        DialogFragment newFragment = graphFragment.newInstance(mServer.getURL(), "MB", "mem" , 6, 1);
-        newFragment.show(getFragmentManager(), "dialog");
+        DialogFragment newFragment = graphFragment.newInstance(mServer.getURL(), "MB", "mem" , 4, 1,"Mémoire");
+        newFragment.show(getFragmentManager(), "graphFragment");
     }
     public void displayGraphCPU(View v){
         // Create the fragment and show it as a dialog.
-        DialogFragment newFragment = graphFragment.newInstance(mServer.getURL(), "%", "cpu" , 6, 1);
-        newFragment.show(getFragmentManager(), "dialog");
+        DialogFragment newFragment = graphFragment.newInstance(mServer.getURL(), "%", "cpu" , 4, 1, "CPU");
+        newFragment.show(getFragmentManager(), "graphFragment");
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
