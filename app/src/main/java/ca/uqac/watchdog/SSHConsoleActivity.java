@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -23,6 +26,11 @@ public class SSHConsoleActivity extends Activity {
     private String username;
     private String password;
     private String sshURL;
+    private TextView commandeTextView;
+    private TextView commandResults;
+    private SSHThread sshThread;
+    private Session session = null;
+    private Channel channel = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +38,9 @@ public class SSHConsoleActivity extends Activity {
         username = getIntent().getStringExtra("username");
         password = getIntent().getStringExtra("password");
         sshURL = getIntent().getStringExtra("sshURL");
+        commandeTextView = (TextView) findViewById(R.id.editTextCommand);
+        commandResults = (TextView) findViewById(R.id.commandResults);
+
 
         final Handler h = new Handler(){
             public void handleMessage(Message msg){
@@ -48,11 +59,38 @@ public class SSHConsoleActivity extends Activity {
 
             }
         };
-        Session session = null;
 
-        SSHThread sshThread = new SSHThread(username,password,sshURL,h);
+        final Handler i = new Handler(){
+            public void handleMessage(Message msg){
+                if(msg.what == 0)
+                    Toast.makeText(SSHConsoleActivity.this, (String) msg.obj, Toast.LENGTH_LONG).show();
+                if(msg.what == 1)
+                    commandResults.setText((String) msg.obj);
+                    //Toast.makeText(SSHConsoleActivity.this, (String) msg.obj, Toast.LENGTH_LONG).show();
+
+            }
+        };
+
+        sshThread = new SSHThread(username,password,sshURL,h);
 
         new Thread(sshThread).start();
+
+        Button sendButton = (Button) findViewById(R.id.sendButton);
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(session == null)
+                    session = sshThread.getSession();
+
+                ExecuteCommandThread execCThread = new ExecuteCommandThread(session,commandeTextView.getText().toString(),i);
+
+                new Thread(execCThread).start();
+
+                commandeTextView.setText("");
+            }
+        });
+
 
     }
 

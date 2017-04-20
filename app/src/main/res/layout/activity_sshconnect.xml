@@ -96,7 +96,7 @@
             android:layout_alignStart="@+id/textView12"
             android:layout_below="@+id/textView11"
             android:ems="10"
-            android:inputType="textVisiblePassword"
+            android:inputType="textPassword"
             android:text="eruNihAyG9"
             tools:text="eruNihAyG9" />
 

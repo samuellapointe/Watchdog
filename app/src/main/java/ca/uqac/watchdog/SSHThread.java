@@ -2,10 +2,15 @@ package ca.uqac.watchdog;
 
 import android.os.Handler;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
 /**
@@ -18,6 +23,7 @@ public class SSHThread extends Thread {
     String password;
     String sshURL;
     Handler h;
+    Channel channel = null;
 
     SSHThread(String username, String password, String sshURL, Handler h)
     {
@@ -30,7 +36,7 @@ public class SSHThread extends Thread {
     public void run()
     {
         JSch jsch = new JSch();
-        Session session = null;
+
         try {
             session = jsch.getSession(username, sshURL, 22);
 
@@ -42,12 +48,20 @@ public class SSHThread extends Thread {
             session.setConfig(prop);
 
             session.connect();
+
+
             if(session.isConnected())
                 h.sendEmptyMessage(0);
             else
                 h.sendEmptyMessage(1);
+
+
         }
+
         catch (JSchException e) {
         }
     }
+
+    public Session getSession(){return session;}
+    public Channel getChannel() {return channel; }
 }
