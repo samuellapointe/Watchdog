@@ -16,7 +16,7 @@ import ca.uqac.watchdog.ServerContract.ServerEntry;
  */
 
 public class ServerEntryDBHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 3; // Changer si on change les infos de la table
+    public static final int DATABASE_VERSION = 4; // Changer si on change les infos de la table
     public static final String DATABASE_NAME = "Servers.db";
 
     // Some commands
