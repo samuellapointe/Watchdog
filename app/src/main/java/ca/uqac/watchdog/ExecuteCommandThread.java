@@ -69,4 +69,6 @@ public class ExecuteCommandThread extends Thread {
             h.sendMessage(myMessage);
         }
     }
+
+    public Session getSession() { return session; }
 }

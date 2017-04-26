@@ -31,6 +31,7 @@ public class SSHConsoleActivity extends Activity {
     private SSHThread sshThread;
     private Session session = null;
     private Channel channel = null;
+    private ExecuteCommandThread execCThread = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +65,10 @@ public class SSHConsoleActivity extends Activity {
             public void handleMessage(Message msg){
                 if(msg.what == 0)
                     Toast.makeText(SSHConsoleActivity.this, (String) msg.obj, Toast.LENGTH_LONG).show();
-                if(msg.what == 1)
+                if(msg.what == 1) {
                     commandResults.setText((String) msg.obj);
-                    //Toast.makeText(SSHConsoleActivity.this, (String) msg.obj, Toast.LENGTH_LONG).show();
+                    session = execCThread.getSession();
+                }
 
             }
         };
@@ -83,7 +85,7 @@ public class SSHConsoleActivity extends Activity {
                 if(session == null)
                     session = sshThread.getSession();
 
-                ExecuteCommandThread execCThread = new ExecuteCommandThread(session,commandeTextView.getText().toString(),i);
+                execCThread = new ExecuteCommandThread(session,commandeTextView.getText().toString(),i);
 
                 new Thread(execCThread).start();
 
