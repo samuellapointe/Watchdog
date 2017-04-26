@@ -2,14 +2,20 @@ package ca.uqac.watchdog;
 
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +26,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by Michael Dery on 2017-02-12.
@@ -143,6 +148,15 @@ public class ServerDetailsActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(drawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        // Show a test notification if server name is "Server" for presentation.
+        if(mServer != null)
+        {
+            if(mServer.getDisplayName().compareToIgnoreCase("Server123") == 0)
+            {
+                PromptNotificationServerNotResponding();
+            }
+        }
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -233,5 +247,41 @@ public class ServerDetailsActivity extends AppCompatActivity {
             final TextView textViewCpu = (TextView) findViewById(R.id.valueCpu);
             textViewCpu.setText(String.valueOf(mServer.getCpu()) + "%");
         }
+    }
+
+    private void PromptNotificationServerNotResponding() {
+        // Create notification text.
+        String notificationMessage = "Server not responding";
+        if (mServer != null) {
+            notificationMessage = mServer.getDisplayName() + ": " + notificationMessage;
+        }
+
+        // Create notification sound.
+        Uri uriSound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        // Create notification action (open current server activity).
+        // Preserve navigation: "Back" goes to Server list.
+        Intent resultIntent = new Intent(this, ServerDetailsActivity.class);
+        resultIntent.putExtra(SERVER, mServer);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(ServerListActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Build notification.
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_stat_name)
+                        .setContentTitle("Watchdog")
+                        .setContentText(notificationMessage)
+                        .setSound(uriSound)
+                        .setContentIntent(resultPendingIntent);
+
+        // Send notification to notification manager.
+        int notificationId = 001;
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationId, notificationBuilder.build());
     }
 }

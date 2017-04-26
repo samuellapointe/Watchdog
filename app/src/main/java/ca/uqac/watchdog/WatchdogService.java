@@ -97,7 +97,8 @@ public class WatchdogService extends Service {
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                        // Commented -- Don't print errors during presentation
+                        //Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
 
                         // Set invalid value to make it clear that data is incorrect.
                         server.setCpu(-1);
